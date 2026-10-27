@@ -1,0 +1,693 @@
+@import "tailwindcss";
+
+/* ───────── Paleta ─────────
+   Sweetie 16 (Lospec) para los sprites y colores fijos; encima, dos temas:
+   «Cuaderno» (claro) y «Arcade de medianoche» (oscuro). */
+:root {
+  --negro: #1a1c2c;
+  --morado: #5d275d;
+  --rojo: #b13e53;
+  --naranja: #ef7d57;
+  --amarillo: #ffcd75;
+  --lima: #a7f070;
+  --verde: #38b764;
+  --turquesa: #257179;
+  --marino: #29366f;
+  --azul: #3b5dc9;
+  --celeste: #41a6f6;
+  --cian: #73eff7;
+  --blanco: #f4f4f4;
+  --gris: #94b0c2;
+  --pizarra: #566c86;
+  --noche: #333c57;
+
+  /* Tema claro: cuaderno */
+  --fondo: #f3ebde;
+  --punto: #ddd0bb;
+  --halo-1: #ffb3c866;
+  --halo-2: #9fd8ff55;
+  --panel: #fffaf2;
+  --panel-2: #f2e8d8;
+  --panel-3: #e7d9c3;
+  --texto: #221c35;
+  --tenue: #6b6385;
+  --borde: #221c35;
+  --sombra: #221c35;
+  --brillo: #ffffffcc;
+  --acento: #e2456f;
+  --acento-2: #f6a93b;
+  --acento-texto: #ffffff;
+  --enlace: #3653cf;
+  --exito: #138a63;
+  --aviso: #ffc65c;
+  --peligro: #d23545;
+  --sobre-color: #1a1430;
+  --cielo-1: #8fd3ff;
+  --cielo-2: #ffd9e4;
+  color-scheme: light;
+}
+
+:root[data-tema="oscuro"] {
+  --fondo: #110f1f;
+  --punto: #221e3b;
+  --halo-1: #ff5c8a2e;
+  --halo-2: #4fc3ff24;
+  --panel: #1d1a34;
+  --panel-2: #272245;
+  --panel-3: #342e5a;
+  --texto: #f5f0e8;
+  --tenue: #a29bc9;
+  --borde: #07060e;
+  --sombra: #07060e;
+  --brillo: #ffffff12;
+  --acento: #ff6b95;
+  --acento-2: #ffc861;
+  --acento-texto: #1a1030;
+  --enlace: #7fd8ff;
+  --exito: #5ee3a8;
+  --aviso: #ffc861;
+  --peligro: #ff6767;
+  --sobre-color: #1a1030;
+  --cielo-1: #1b1740;
+  --cielo-2: #45286b;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --fondo: #110f1f;
+    --punto: #221e3b;
+    --halo-1: #ff5c8a2e;
+    --halo-2: #4fc3ff24;
+    --panel: #1d1a34;
+    --panel-2: #272245;
+    --panel-3: #342e5a;
+    --texto: #f5f0e8;
+    --tenue: #a29bc9;
+    --borde: #07060e;
+    --sombra: #07060e;
+    --brillo: #ffffff12;
+    --acento: #ff6b95;
+    --acento-2: #ffc861;
+    --acento-texto: #1a1030;
+    --enlace: #7fd8ff;
+    --exito: #5ee3a8;
+    --aviso: #ffc861;
+    --peligro: #ff6767;
+    --sobre-color: #1a1030;
+    --cielo-1: #1b1740;
+    --cielo-2: #45286b;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-fondo: var(--fondo);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-panel-3: var(--panel-3);
+  --color-texto: var(--texto);
+  --color-tenue: var(--tenue);
+  --color-borde: var(--borde);
+  --color-acento: var(--acento);
+  --color-acento-2: var(--acento-2);
+  --color-enlace: var(--enlace);
+  --color-exito: var(--exito);
+  --color-aviso: var(--aviso);
+  --color-peligro: var(--peligro);
+  --color-negro: var(--negro);
+  --color-blanco: var(--blanco);
+  --font-titulo: var(--fuente-titulo);
+  --font-texto: var(--fuente-texto);
+}
+
+/* Base y componentes van en capas para que las utilidades de Tailwind puedan sobrescribirlos */
+@layer base {
+  /* ───────── Base ───────── */
+  html {
+    background: var(--fondo);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    color: var(--texto);
+    font-family: var(--fuente-texto), ui-monospace, monospace;
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    /* Pixelify Sans dibuja «fi» como una sola letra: mejor sin ligaduras */
+    font-variant-ligatures: none;
+    font-feature-settings: "liga" 0, "calt" 0;
+    min-height: 100dvh;
+    background-color: var(--fondo);
+    /* Halos suaves + rejilla de puntos de 2×2 px */
+    background-image:
+      radial-gradient(60rem 40rem at 0% -10%, var(--halo-1), transparent 70%),
+      radial-gradient(50rem 40rem at 110% 10%, var(--halo-2), transparent 70%),
+      conic-gradient(at 2px 2px, transparent 75%, var(--punto) 0);
+    background-size: 100% 100%, 100% 100%, 24px 24px;
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .titulo-pixel {
+    font-family: var(--fuente-texto), monospace;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+  }
+  h1 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem); }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.08rem; }
+
+  /* Letra de etiqueta: Silkscreen, en mayúsculas pequeñas */
+  .titulo {
+    font-family: var(--fuente-titulo), monospace;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+
+  a { color: var(--enlace); text-underline-offset: 3px; }
+  a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+
+  :focus-visible {
+    outline: 3px solid var(--acento);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--acento);
+    color: var(--acento-texto);
+  }
+}
+
+@layer components {
+  /* ───────── Paneles ─────────
+     Borde de 3 px con esquinas recortadas y sombra dura escalonada abajo a la derecha. */
+  .ventana {
+    position: relative;
+    /* Los formularios de dentro se adaptan al ancho del panel, no al de la pantalla */
+    container-type: inline-size;
+    background: var(--panel);
+    color: var(--texto);
+    margin: 3px 8px 8px 3px;
+    padding: 1.15rem 1.2rem 1.25rem;
+    box-shadow:
+      0 -3px 0 0 var(--borde),
+      0 3px 0 0 var(--borde),
+      -3px 0 0 0 var(--borde),
+      3px 0 0 0 var(--borde),
+      3px 8px 0 0 var(--sombra),
+      8px 3px 0 0 var(--sombra),
+      inset 0 3px 0 0 var(--brillo);
+  }
+  @media (min-width: 640px) {
+    .ventana { padding: 1.35rem 1.5rem 1.5rem; }
+  }
+
+  .ventana-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: -0.15rem 0 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px dashed var(--panel-3);
+  }
+  .ventana-titulo {
+    font-family: var(--fuente-titulo), monospace;
+    font-size: 0.85rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    margin-right: auto;
+  }
+  .ventana-titulo::before {
+    content: "";
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    background: var(--acento);
+    box-shadow: 3px 3px 0 0 var(--acento-2);
+  }
+
+  /* Tarjeta: panel pequeño que se levanta al pasar el ratón */
+  .tarjeta {
+    position: relative;
+    background: var(--panel);
+    margin: 2px 6px 6px 2px;
+    padding: 0.9rem 1rem;
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      2px 6px 0 0 var(--sombra),
+      6px 2px 0 0 var(--sombra),
+      inset 0 -4px 0 0 var(--panel-2);
+    transition: transform 160ms cubic-bezier(0.3, 0.7, 0.4, 1.5), box-shadow 160ms ease-out;
+  }
+  .tarjeta-viva:hover {
+    transform: translate(-2px, -2px);
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      4px 8px 0 0 var(--sombra),
+      8px 4px 0 0 var(--sombra),
+      inset 0 -4px 0 0 var(--panel-2);
+  }
+
+  /* Separador punteado de píxeles */
+  .separador {
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--panel-3) 0 6px, transparent 6px 10px);
+  }
+
+  /* ───────── Botones tipo tecla ───────── */
+  .boton-pixel {
+    --btn-bg: var(--panel);
+    --btn-fg: var(--texto);
+    --btn-int: var(--panel-3);
+    font-family: var(--fuente-titulo), monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem 0.8rem;
+    margin: 2px 2px 8px;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    cursor: pointer;
+    text-decoration: none !important;
+    white-space: nowrap;
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      0 6px 0 -2px var(--borde),
+      inset 0 -4px 0 0 var(--btn-int),
+      inset 0 2px 0 0 var(--brillo);
+    transition: transform 110ms ease-out, box-shadow 110ms ease-out, filter 110ms;
+    user-select: none;
+  }
+  .boton-pixel:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      0 7px 0 -2px var(--borde),
+      inset 0 -4px 0 0 var(--btn-int),
+      inset 0 2px 0 0 var(--brillo);
+  }
+  .boton-pixel:active,
+  .boton-pixel[data-pulsado="si"] {
+    /* Se hunde hasta el suelo */
+    transform: translateY(4px);
+    transition-duration: 40ms;
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      inset 0 3px 0 0 var(--btn-int);
+  }
+  .boton-pixel:disabled { opacity: 0.6; cursor: wait; transform: none; }
+  .boton-primario { --btn-bg: var(--acento); --btn-fg: var(--acento-texto); --btn-int: color-mix(in srgb, var(--acento) 70%, black); }
+  .boton-exito { --btn-bg: var(--exito); --btn-fg: var(--sobre-color); --btn-int: color-mix(in srgb, var(--exito) 65%, black); }
+  .boton-peligro { --btn-bg: var(--peligro); --btn-fg: #fff; --btn-int: color-mix(in srgb, var(--peligro) 65%, black); }
+  .boton-mini { font-size: 0.68rem; padding: 0.45rem 0.65rem 0.55rem; gap: 0.35rem; }
+
+  /* El <summary> que hace de botón no lleva triángulo */
+  summary.boton-pixel { list-style: none; }
+  summary.boton-pixel::-webkit-details-marker { display: none; }
+
+  /* ───────── Formularios ───────── */
+  .campo-pixel {
+    width: 100%;
+    background: var(--panel-2);
+    color: var(--texto);
+    font-family: var(--fuente-texto), monospace;
+    font-size: 1.05rem;
+    padding: 0.55rem 0.75rem;
+    margin: 2px 0;
+    border: none;
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      inset 0 3px 0 0 color-mix(in srgb, var(--borde) 12%, transparent);
+    transition: box-shadow 120ms ease-out, background 120ms;
+  }
+  .campo-pixel::placeholder { color: var(--tenue); opacity: 0.8; }
+  .campo-pixel:hover { background: var(--panel-3); }
+  .campo-pixel:focus {
+    outline: none;
+    background: var(--panel);
+    box-shadow:
+      0 -2px 0 0 var(--acento),
+      0 2px 0 0 var(--acento),
+      -2px 0 0 0 var(--acento),
+      2px 0 0 0 var(--acento),
+      0 0 0 6px color-mix(in srgb, var(--acento) 25%, transparent);
+  }
+  .etiqueta {
+    font-family: var(--fuente-titulo), monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--tenue);
+    display: block;
+    margin-bottom: 0.45rem;
+  }
+  legend.etiqueta { margin-bottom: 0.55rem; }
+  .error-campo { color: var(--peligro); font-size: 0.95rem; margin-top: 0.25rem; }
+
+  .opcion-pixel { display: inline-block; }
+  .opcion-pixel input { position: absolute; opacity: 0; pointer-events: none; }
+  .opcion-pixel > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.7rem;
+    margin: 4px;
+    cursor: pointer;
+    background: var(--panel-2);
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      inset 0 -3px 0 0 var(--panel-3);
+    transition: transform 120ms ease-out, background 120ms;
+  }
+  .opcion-pixel:hover > span { background: var(--panel-3); transform: translateY(-1px); }
+  .opcion-pixel input:checked + span {
+    background: var(--acento);
+    color: var(--acento-texto);
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      inset 0 -3px 0 0 color-mix(in srgb, var(--acento) 70%, black);
+    animation: elegir 220ms cubic-bezier(0.3, 0.7, 0.4, 1.6);
+  }
+  .opcion-pixel input:focus-visible + span { outline: 3px solid var(--acento); outline-offset: 4px; }
+  @keyframes elegir {
+    0% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+  }
+
+  input[type="checkbox"] { accent-color: var(--acento); }
+
+  /* ───────── Etiquetas ───────── */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--fuente-titulo), monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    padding: 0.25rem 0.5rem;
+    background: var(--panel-2);
+    box-shadow: 0 -2px 0 0 var(--borde), 0 2px 0 0 var(--borde), -2px 0 0 0 var(--borde), 2px 0 0 0 var(--borde);
+    margin: 4px;
+  }
+  .chip-aviso { background: var(--aviso); color: var(--sobre-color); }
+  .chip-exito { background: var(--exito); color: var(--sobre-color); }
+  .chip-peligro { background: var(--peligro); color: #fff; }
+  .chip-acento { background: var(--acento); color: var(--acento-texto); }
+
+  /* Nota destacada: una frase con barra lateral de color */
+  .nota {
+    display: block;
+    padding: 0.55rem 0.8rem;
+    background: color-mix(in srgb, var(--c, var(--aviso)) 22%, var(--panel));
+    box-shadow: inset 4px 0 0 0 var(--c, var(--aviso));
+    line-height: 1.35;
+  }
+
+  /* Bocadillo de diálogo con cola de píxeles */
+  .bocadillo {
+    position: absolute;
+    background: var(--blanco);
+    color: var(--negro);
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    padding: 0.45rem 0.65rem;
+    white-space: nowrap;
+    box-shadow: 0 -2px 0 0 var(--negro), 0 2px 0 0 var(--negro), -2px 0 0 0 var(--negro), 2px 0 0 0 var(--negro), 3px 5px 0 0 #0004;
+  }
+  .bocadillo::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: var(--cola, 1rem);
+    width: 6px;
+    height: 6px;
+    background: var(--blanco);
+    box-shadow: -2px 0 0 0 var(--negro), 2px 0 0 0 var(--negro), 0 2px 0 0 var(--negro), 3px 3px 0 0 var(--negro);
+  }
+
+  /* ───────── Estructura de la app ───────── */
+  .lateral {
+    background: var(--panel);
+    box-shadow: 3px 0 0 0 var(--borde), 8px 0 0 0 color-mix(in srgb, var(--sombra) 18%, transparent);
+  }
+  .nav-enlace {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.85rem;
+    color: var(--texto);
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: background 120ms, transform 120ms ease-out;
+  }
+  .nav-enlace:hover { background: var(--panel-2); }
+  .nav-enlace:hover .nav-icono { transform: translateY(-2px) rotate(-6deg); }
+  .nav-enlace[aria-current="page"] { color: var(--acento-texto); }
+  .nav-icono { transition: transform 160ms cubic-bezier(0.3, 0.7, 0.4, 1.6); }
+  .nav-activo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--acento);
+    box-shadow:
+      0 -2px 0 0 var(--borde),
+      0 2px 0 0 var(--borde),
+      -2px 0 0 0 var(--borde),
+      2px 0 0 0 var(--borde),
+      inset 0 -4px 0 0 color-mix(in srgb, var(--acento) 70%, black);
+  }
+  .globo {
+    font-family: var(--fuente-titulo), monospace;
+    font-size: 0.62rem;
+    line-height: 1;
+    min-width: 1.35rem;
+    padding: 0.25rem 0.3rem;
+    text-align: center;
+    background: var(--aviso);
+    color: var(--sobre-color);
+    box-shadow: 0 -2px 0 0 var(--borde), 0 2px 0 0 var(--borde), -2px 0 0 0 var(--borde), 2px 0 0 0 var(--borde);
+  }
+
+  .barra-movil {
+    background: var(--panel);
+    box-shadow: 0 -3px 0 0 var(--borde), 0 -7px 0 0 color-mix(in srgb, var(--sombra) 14%, transparent);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .barra-superior {
+    background: color-mix(in srgb, var(--fondo) 88%, transparent);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 3px 0 0 var(--borde);
+  }
+
+  /* Columna de paneles apilados */
+  .pila { display: flex; flex-direction: column; gap: 1.75rem; min-width: 0; }
+
+  /* Rejilla que se adapta sola al ancho disponible */
+  .rejilla-auto {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--min, 16rem)), 1fr));
+  }
+
+  /* Masonry sencillo con columnas CSS */
+  .mosaico { columns: 1; column-gap: 1.75rem; }
+  .mosaico > * { break-inside: avoid; margin-bottom: 1.75rem; display: block; }
+  @media (min-width: 1024px) { .mosaico { columns: 2; } }
+  @media (min-width: 1600px) { .mosaico { columns: 3; } }
+
+  /* ───────── Sprites ───────── */
+  .sprite {
+    display: inline-block;
+    overflow: hidden;
+    flex-shrink: 0;
+    image-rendering: pixelated;
+    vertical-align: middle;
+  }
+  .sprite-hoja { display: block; max-width: none; }
+
+  @keyframes sprite-hoja {
+    to { transform: translateX(-100%); }
+  }
+  @keyframes sprite-una {
+    to { transform: translateX(var(--sprite-fin)); }
+  }
+
+  /* ───────── Animaciones ───────── */
+
+  /* Salto al guardar */
+  @keyframes saltar {
+    0%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-14px); }
+    60% { transform: translateY(0); }
+    80% { transform: translateY(-4px); }
+  }
+  .saltar { animation: saltar 0.6s steps(6); }
+
+  /* Entrada escalonada con un pequeño rebote */
+  @keyframes entra-rebote {
+    0% { opacity: 0; transform: translateY(14px) scale(0.97); }
+    70% { opacity: 1; transform: translateY(-2px) scale(1.005); }
+    100% { opacity: 1; transform: none; }
+  }
+  .entra-rebote {
+    animation: entra-rebote 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 60ms);
+  }
+
+  /* Paneles que aparecen al cargar la página */
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+  .aparecer {
+    animation: aparecer 0.45s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  /* Calendario que se pinta celda a celda */
+  @keyframes pintar {
+    from { opacity: 0; transform: scale(0.2); }
+    to { opacity: 1; transform: none; }
+  }
+  .pintar {
+    animation: pintar 0.2s steps(3) backwards;
+    animation-delay: calc(var(--i, 0) * 10ms);
+  }
+
+  /* Latido para la cara de ánimo seleccionada */
+  @keyframes latir {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  .latir { animation: latir 0.8s steps(2) infinite; }
+
+  /* Flotar suave (sprites decorativos) */
+  @keyframes flotar {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  .flotar { animation: flotar var(--dur, 2.6s) steps(4) infinite; animation-delay: var(--retraso, 0s); }
+
+  /* Destello que recorre un texto destacado */
+  @keyframes destello {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  .texto-destello {
+    background: linear-gradient(100deg, var(--texto) 40%, var(--acento) 50%, var(--acento-2) 55%, var(--texto) 65%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: destello 6s linear infinite;
+  }
+
+  /* Cursor de diálogo */
+  @keyframes parpadeo { 50% { opacity: 0; } }
+  .cursor-dialogo { animation: parpadeo 0.8s steps(1) infinite; }
+
+  /* Globo que aparece con «pop» */
+  @keyframes pop {
+    0%, 8% { opacity: 0; transform: scale(0.6) translateY(6px); }
+    14%, 80% { opacity: 1; transform: none; }
+    88%, 100% { opacity: 0; transform: scale(0.9) translateY(-4px); }
+  }
+  .pop { animation: pop var(--dur, 6s) cubic-bezier(0.3, 0.7, 0.4, 1.4) infinite; animation-delay: var(--retraso, 0s); }
+
+  /* Parallax de la portada */
+  @keyframes desplazar {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .capa-parallax {
+    position: absolute;
+    inset: 0;
+    width: 200%;
+    display: flex;
+    animation: desplazar var(--vel, 60s) linear infinite;
+    pointer-events: none;
+  }
+  @keyframes titilar { 50% { opacity: 0.2; } }
+  .estrella {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--blanco);
+    animation: titilar var(--t, 2s) steps(2) infinite;
+  }
+
+  /* Destellos en forma de «+» que decoran el fondo */
+  .chispa {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--c, var(--acento)), var(--c, var(--acento))) center / 4px 12px no-repeat,
+      linear-gradient(var(--c, var(--acento)), var(--c, var(--acento))) center / 12px 4px no-repeat;
+    animation: titilar var(--t, 2.4s) steps(2) infinite;
+  }
+
+  .sr-only-pixel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* Accesibilidad: con movimiento reducido todo se queda quieto */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .sprite-hoja, .capa-parallax, .latir, .estrella, .chispa, .flotar, .texto-destello { animation: none !important; }
+  .texto-destello { color: var(--texto); background: none; }
+  .pop { animation: none !important; opacity: 1; }
+}

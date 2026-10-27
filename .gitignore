@@ -1,0 +1,56 @@
+# dependencias
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+.next-docs/
+
+# producción
+/build
+/dist
+
+# varios
+.DS_Store
+Thumbs.db
+desktop.ini
+*.pem
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# variables de entorno (nunca subir secretos; .env.example sí se sube)
+.env
+.env*.local
+.env.development
+.env.production
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+
+# claude code (configuración local)
+.claude/settings.local.json
